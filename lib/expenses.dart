@@ -1,4 +1,5 @@
 import 'package:expense_management_app/expenses_list.dart';
+import 'package:expense_management_app/new_expense.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense_management_app/models/expense.dart';
@@ -35,9 +36,7 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseForm() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) {
-        return const Text('Add Expense Form');
-      },
+      builder: (ctx) => const NewExpense(),
     );
   }
 
