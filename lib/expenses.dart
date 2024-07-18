@@ -1,21 +1,41 @@
+import 'package:expense_management_app/expenses_list.dart';
 import 'package:flutter/material.dart';
 
-class Expenses extends StatefulWidget {
-  const Expenses({super.key});
+import 'package:expense_management_app/models/expense.dart';
 
-  @override
-  State createState() => _ExpensesState();
-}
+class Expenses extends StatelessWidget {
+  Expenses({super.key});
 
-class _ExpensesState extends State<Expenses> {
+  final List<Expense> _registeredExpenses = [
+    Expense(
+      title: 'Groceries',
+      amount: 100.00,
+      date: DateTime.now(),
+      category: Category.food,
+    ),
+    Expense(
+      title: 'Cinema',
+      amount: 50.00,
+      date: DateTime.now(),
+      category: Category.leisure,
+    ),
+    Expense(
+      title: 'Cruise',
+      amount: 500.00,
+      date: DateTime.now(),
+      category: Category.travel,
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         children: [
-          Text('Chart'),
-          Text('Expenses List'),
+          const Text('Chart'),
+          Expanded(
+            child: ExpensesList(_registeredExpenses),
+          ),
         ],
       ),
     );

@@ -4,7 +4,7 @@ import 'package:expense_management_app/expenses.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
+    MaterialApp(
       home: Expenses(),
     ),
   );
