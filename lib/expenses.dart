@@ -35,6 +35,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseForm() {
     showModalBottomSheet(
+      // isScrollControlled: true, // to make it fullscreen
       context: context,
       builder: (ctx) => NewExpense(saveExpense),
     );
