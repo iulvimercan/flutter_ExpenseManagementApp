@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:expense_management_app/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense(this.saveExpense, {super.key});
+
+  final void Function(Expense expense) saveExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -14,7 +16,7 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
-  Category? _selectedCategory = Category.leisure;
+  Category? _selectedCategory;
 
   void _presentDatePicker() async {
     final now = DateTime.now();
@@ -29,6 +31,43 @@ class _NewExpenseState extends State<NewExpense> {
     setState(() {
       _selectedDate = pickedDate;
     });
+  }
+
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    final titleIsEmpty = _titleController.text.trim().isEmpty;
+    final categoryIsInvalid = _selectedCategory == null;
+    final dateIsInvalid = _selectedDate == null;
+
+    if (titleIsEmpty || amountIsInvalid || categoryIsInvalid || dateIsInvalid) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text('Please make sure all the fields are correctly filled.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    } else {
+      Navigator.of(context).pop();
+      final newExpense = Expense(
+        title: _titleController.text,
+        amount: enteredAmount,
+        date: _selectedDate!,
+        category: _selectedCategory!,
+      );
+
+      widget.saveExpense(newExpense);
+
+
+    }
   }
 
   @override
@@ -90,6 +129,13 @@ class _NewExpenseState extends State<NewExpense> {
           Row(
             children: [
               DropdownButton(
+                hint: const Text(
+                  'Category...',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
                 value: _selectedCategory,
                 items: [
                   ...Category.values.map((category) {
@@ -106,7 +152,7 @@ class _NewExpenseState extends State<NewExpense> {
                   }),
                 ],
                 onChanged: (value) {
-                  if(value == null || value is! Category) {
+                  if (value == null) {
                     return;
                   }
                   setState(() {
@@ -120,8 +166,7 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text('Cancel'),
               ),
               ElevatedButton.icon(
-                onPressed: () =>
-                    print('${_titleController.text} ${_amountController.text}'),
+                onPressed: _submitExpenseData,
                 icon: const Icon(Icons.save),
                 label: const Text('Save'),
               ),
