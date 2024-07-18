@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:expense_management_app/models/expense.dart';
 
-class Expenses extends StatelessWidget {
-  Expenses({super.key});
+class Expenses extends StatefulWidget {
+  const Expenses({super.key});
 
+  @override
+  State<Expenses> createState() => _ExpensesState();
+}
+
+class _ExpensesState extends State<Expenses> {
   final List<Expense> _registeredExpenses = [
     Expense(
       title: 'Groceries',
@@ -27,6 +32,15 @@ class Expenses extends StatelessWidget {
     )
   ];
 
+  void _openAddExpenseForm() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return const Text('Add Expense Form');
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +48,7 @@ class Expenses extends StatelessWidget {
         title: const Text('Expense Manager'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: _openAddExpenseForm,
             icon: const Icon(Icons.add),
           )
         ],
